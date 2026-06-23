@@ -8,7 +8,7 @@ def test_launch():
         browser = p.chromium.launch(headless=False)
         context = browser.new_context()
         page = context.new_page()
-
+        #Login to the application
         page.goto("https://dna-preprod.hashedin.com/pursuits/")
         page.get_by_role("button", name="Login using SSO").click()
         page.get_by_role("textbox", name="username").fill("hashedintestuser108")
@@ -27,10 +27,23 @@ def test_launch():
         #validate headiing of the page after login
         expect(page.get_by_text("Demand Pursuits")).to_be_visible()
         print("Login successful")
-     
-    
-    
-       
+
+        # Dashboard Heading Validation
+        categories = ["All", "New", "In Progress", "Cancelled", "Won", "Deferred"]
+
+        for category in categories:
+            expect(page.locator("span").filter(has_text=category).first).to_be_visible()
+        print(f"✓ {category} is displayed")
+
+        print("✓ All 6 categories are displayed")
+
+        #  List of all Pursuits
+        expect(page.get_by_text("List of all Pursuits")).to_be_visible()
+        print("✓ List of all Pursuits is displayed")
+
+
+        
+ 
 
         page.wait_for_timeout(10000)
         assert page is not None
